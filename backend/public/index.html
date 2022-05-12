@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>Find the best restroom nearby | Ratealoo</title>
+    
+    <!-- Tailwind CSS -->
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="/assets/scripts/nearbyRestroom.js"></script>
+
+    <script>
+        (async () => {
+            let request = await fetch("/api/ratings")
+            let data = await request.json()
+            console.log(data)
+
+            data.forEach(element => {
+                console.log(element)
+                document.getElementById("nearby-restrooms").appendChild(
+                    nearbyRestroom(element.location, element.details, element.rating)
+                )
+            });
+        })()
+    </script>
+</head>
+<body>
+    <section class="p-10 bg-gradient-to-r from-purple-500 to-pink-500">
+        <h1 class="font-sans text-2xl font-medium text-white">
+            Find the perfect porcelain throne
+        </h1>
+    </section>
+
+    <section>
+        <a href="/review" class="bg-black hover:bg-gray-900 text-white pl-4 pr-4 pt-3 pb-3 inline-block rounded-sm">
+            Review a restroom
+        </a>
+    </section>
+    <section class="p-4">
+        <h4 class="font-light text-xl mb-2">
+            Nearby Restooms
+        </h4>
+        <ul id="nearby-restrooms"></ul>
+    </section>
+</body>
+</html>
