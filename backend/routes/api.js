@@ -58,13 +58,30 @@ router.get("/locations", async (req, res) => {
         return
     }
 
-    getBoundsFromPoint()
+    const db = await openDb()
+    const result = await db.all('SELECT * FROM locations LIMIT 25 OFFSET 0')
 
-    res.json({ lat, long, radius })
+    //getBoundsFromPoint()
+
+    res.json(result)
 })
 
 router.post("/locations", async (req, res) => {
-    
+    if(req.body === undefined) {
+        res.sendStatus(400);
+        return;
+    }
+
+    const { name, address, lat, long } = req.body
+    const db = await openDb()
+    const result = await db.run('INSERT INTO locations (name, address, lat, long) VALUES (:name, :address, :lat, :long)', {
+        ':name': name,
+        ':address': address,
+        ':lat': lat,
+        ':long': long
+    })
+
+    res.json({ status: "OK" })
 })
 
 router.get("/locations/:location", async (req, res) => {
