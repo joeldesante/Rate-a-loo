@@ -16,5 +16,5 @@ app.use(express.static("public"))
 app.use("/api", api)
 
 app.listen(settings.port, settings.hostname, () => {
-    console.log(`Server running on ${settings.hostname}:${settings.port}`)
+    console.log(`Server running on http://${settings.hostname}:${settings.port}`)
 })
