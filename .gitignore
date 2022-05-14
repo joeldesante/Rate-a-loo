@@ -106,7 +106,7 @@ dist
 # Temp files
 backend/tmp/
 
-./backend/secrets.json
-./backend/settings.json
+backend/secrets.json
+backend/settings.json
 
 .DS_Store
