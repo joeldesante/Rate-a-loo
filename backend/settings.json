@@ -1,9 +1,0 @@
-{
-    "hostname": "0.0.0.0",
-    "port": 3030,
-    "mapbox": {
-        "public_token": "pk.eyJ1IjoieW9vb2dsZSIsImEiOiJjbDMxdmMzMnowNTlqM2pxanMycGoyazN1In0.HenbndmG5LiEdqw1fNLV_w"
-    },
-    "imgur_client_id": "64123456d5c2371",
-    "imgur_secret": "77577d364163c87ea27b22cbbbd3690caaa8af24"
-}
