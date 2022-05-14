@@ -11,7 +11,7 @@ router.get("/ping", async (req, res) => {
 
 router.get("/ratings", async (req, res) => {
     const db = await openDb()
-    const ratings = await db.all('SELECT * FROM ratings LIMIT 25 OFFSET 0')
+    const ratings = await db.all('SELECT rowid, * FROM ratings LIMIT 25 OFFSET 0')
     res.json(ratings)
 })
 
@@ -35,7 +35,7 @@ router.post("/ratings", async (req, res) => {
 
 router.get("/ratings/:rating", async (req, res) => {
     const db = await openDb()
-    const rating = await db.get('SELECT * FROM ratings WHERE rowid = ?', req.params.rating)
+    const rating = await db.get('SELECT rowid, * FROM ratings WHERE rowid = ?', req.params.rating)
 
     if(rating === undefined) {
         res.sendStatus(404);
@@ -59,7 +59,7 @@ router.get("/locations", async (req, res) => {
     }
 
     const db = await openDb()
-    const result = await db.all('SELECT * FROM locations LIMIT 25 OFFSET 0')
+    const result = await db.all('SELECT l.rowid, l.*, ROUND(avg(r.rating)) AS score, count(r.rating) as num_ratings FROM locations l LEFT JOIN ratings r ON l.rowid=r.location LIMIT 25 OFFSET 0')
 
     //getBoundsFromPoint()
 
@@ -85,7 +85,10 @@ router.post("/locations", async (req, res) => {
 })
 
 router.get("/locations/:location", async (req, res) => {
-    
+    const db = await openDb()
+    //const result = await db.get('SELECT rowid, * FROM locations WHERE rowid = ?', req.params.location)
+    const result = await db.get('SELECT l.rowid, l.*, ROUND(avg(r.rating)) AS score, count(r.rating) as num_ratings FROM locations l LEFT JOIN ratings r ON l.rowid=r.location WHERE l.rowid = ?', req.params.location)
+    res.json(result)
 })
 
 

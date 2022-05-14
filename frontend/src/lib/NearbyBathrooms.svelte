@@ -17,8 +17,9 @@
         {#each nearbyBathrooms as nearbyBathroom }
             <li class="mb-4">
                 <Bathroom 
+                    locationId={nearbyBathroom.rowid}
                     locationName={nearbyBathroom.name} 
-                    score=80 
+                    score={nearbyBathroom.score} 
                     address={nearbyBathroom.address}
                 />
                 <hr class="mt-3" />

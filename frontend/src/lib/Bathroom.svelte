@@ -1,13 +1,14 @@
 <script>
     import { link } from 'svelte-spa-router';
 
+    export let locationId;
     export let locationName;
-    export let score;
+    export let score = "?";
     export let address;
 </script>
 
 <div>
-    <a href="/locations/{locationName}" use:link>
+    <a href="/locations/{locationId}" use:link>
         <div class="bg-gray-200 rounded">
             <!-- Image -->
             <img src="https://nypost.com/wp-content/uploads/sites/2/2021/08/jfk-t4-restroom-3.jpg" class="object-cover h-40 w-full rounded">
