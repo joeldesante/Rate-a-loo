@@ -1,17 +1,27 @@
 <script>
-    import { link } from 'svelte-spa-router';
+import settings from '../../settings.js';
 
+    import { onMount } from 'svelte';
+    import { link } from 'svelte-spa-router';
     export let locationId;
     export let locationName;
     export let score = "?";
     export let address;
+
+    let image = "#"
+
+    onMount(async () => {
+        const request = await fetch(`${settings.host}/api/locations/${locationId}/images`);
+        const images = await request.json();
+        console.log(images[0].image)
+        image = images[0].image || "#";
+    })
 </script>
 
 <div>
     <a href="/locations/{locationId}" use:link>
         <div class="bg-gray-200 rounded">
-            <!-- Image -->
-            <img src="https://nypost.com/wp-content/uploads/sites/2/2021/08/jfk-t4-restroom-3.jpg" class="object-cover h-40 w-full rounded">
+            <img src={ image } class="object-cover h-40 w-full rounded">
         </div>
     </a>
     <div class="flex flex-space mt-2 justify-center items-center">

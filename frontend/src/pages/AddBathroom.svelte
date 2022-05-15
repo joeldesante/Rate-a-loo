@@ -26,8 +26,9 @@ async function handleSubmit(e) {
 
     if(result.ok) {
         console.log("Submitted");
-        push('/');
     }
+
+    push("/");
 
 }
 </script>

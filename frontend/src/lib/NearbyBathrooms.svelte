@@ -1,11 +1,12 @@
 <script>
     import { onMount } from 'svelte';
     import Bathroom from './Bathroom.svelte';
+    import settings from '../../settings.js';
 
     let nearbyBathrooms = [];
     
     onMount(async () => {
-        const response = await fetch("http://0.0.0.0:3030/api/locations?lat=0&long=0");
+        const response = await fetch(`${settings.host}/api/locations?lat=0&long=0`);
         nearbyBathrooms = await response.json();
         console.log(nearbyBathrooms)
     });
