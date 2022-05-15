@@ -22,8 +22,12 @@ RUN \
   libyaml-dev \
   zlib1g-dev
 
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
 # Install Node.js
 RUN apt-get install -y nodejs npm
+
+RUN node --version
 
 # SqLite
 RUN apt-get -y install sqlite3 libsqlite3-dev
