@@ -13,7 +13,6 @@ RUN \
   build-essential \
   curl \
   git-core \
-  python-software-properties \
   libcurl4-openssl-dev \
   libc6-dev \
   libreadline-dev \
