@@ -22,12 +22,13 @@ router.post("/ratings", async (req, res) => {
         return;
     }
 
-    const { rating, location, details } = req.body
+    const { rating, location, details, image } = req.body
     const db = await openDb()
-    const result = await db.run('INSERT INTO ratings (rating, location, details) VALUES (:rating, :location, :details)', {
+    const result = await db.run('INSERT INTO ratings (rating, location, details, image) VALUES (:rating, :location, :details, :image)', {
         ':rating': rating,
         ':location': location,
         ':details': details,
+        ':image': image
     })
 
     res.json({ status: "OK" })
@@ -88,6 +89,14 @@ router.get("/locations/:location", async (req, res) => {
     const db = await openDb()
     //const result = await db.get('SELECT rowid, * FROM locations WHERE rowid = ?', req.params.location)
     const result = await db.get('SELECT l.rowid, l.*, ROUND(avg(r.rating)) AS score, count(r.rating) as num_ratings FROM locations l LEFT JOIN ratings r ON l.rowid=r.location WHERE l.rowid = ?', req.params.location)
+    res.json(result)
+})
+
+router.get("/locations/:location/images", async (req, res) => {
+    const q = "SELECT image FROM ratings WHERE location = ? LIMIT 10";
+    const db = await openDb()
+    //const result = await db.get('SELECT rowid, * FROM locations WHERE rowid = ?', req.params.location)
+    const result = await db.all(q, req.params.location)
     res.json(result)
 })
 
