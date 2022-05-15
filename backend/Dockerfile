@@ -22,7 +22,7 @@ RUN \
   libyaml-dev \
   zlib1g-dev
 
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 
 # Install Node.js
 RUN apt-get install -y nodejs npm
