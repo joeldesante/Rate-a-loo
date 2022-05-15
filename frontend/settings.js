@@ -1,3 +1,3 @@
 export default {
-    host: "http://ratealoo.joeldesante.com:3030"
+    host: "http://ratealoo.wravvel.com:3030"
 }
