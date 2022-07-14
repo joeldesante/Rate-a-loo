@@ -1,6 +1,5 @@
 <script>
-    import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-    import storage from "../firebase.js";
+    import { link, push } from "svelte-spa-router"; 
     import { nanoid } from "nanoid";
     import settings from "../../settings.js";
 
@@ -10,50 +9,55 @@
 
         const data = new FormData(e.target)
         const file = data.get("image");
-
-        // Create a ref
-        const storageRef = ref(storage, nanoid());
-
-        // Upload Image
-        const result = await uploadBytes(storageRef, file);
-        const imageLocation = await getDownloadURL(storageRef);
-
-        console.log(imageLocation)
-        console.log('Uploaded a blob or file!', result);
-
-        // -- Now to publish the review
-        let postBody = {
-            rating: data.get("score"),
-            details: data.get("details"),
-            image: imageLocation,
-            location: params.location
+        
+        // POST the image blob...
+        let resourceURI = null;
+        if (file.size > 0) {
+            const imageResponse = await fetch(
+                `${settings.host}/blobs`,
+                {
+                    method: "POST",
+                    body: file
+                }
+            );
+            const data = await imageResponse.json();
+            resourceURI = data.resourceURI;
         }
 
-        console.log(postBody)
+        const reviewResponse = await fetch(
+            `${settings.host}/locations/${params.location}/reviews`,
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    score: data.get("score"),
+                    details: data.get("details"),
+                    image: resourceURI
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }
+        );
 
-        let postResult = await fetch(`${settings.host}/api/ratings`, { 
-            method: "POST", 
-            body: JSON.stringify(postBody),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }, 
-        })
 
-        if(postResult.ok) {
+
+        if(reviewResponse.ok) {
             console.log("Submitted");
-            push("/");
+            push(`/locations/${params.location}/`);
         }
-
     }
 </script>
 
-<main>
-    <h2 class="font-serif text-2xl font-bold mb-4 mt-4">Leave a review</h2>
+
+<div class="flex justify-between items-center mt-6 mb-2 p-4 pt-0 pb-0">
+    <p class="font-bold text-2xl">Leave a Review</p>
+    <a href="/locations/{params.location}/" use:link class="p-2 pl-4 pr-4 bg-blue-500 text-white font-medium rounded">Back</a>
+</div>
+<div class="p-4">
     <form on:submit|preventDefault={handleSubmit}>
-        <input class="block p-3 rounded border mb-2 w-full" type="file" name="image" id="image" accept="image/png, image/jpeg, image/webp, image/gif">
-        <input class="block p-3 rounded border mb-2 w-full" name="score" type="number" placeholder="Score (out of 100)" max="100" min="0" required />
-        <textarea class="block p-3 rounded border mb-2 w-full" name="details" placeholder="Thoughts?"></textarea>
-        <button type="submit" class="block bg-blue-600 text-white rounded p-3">Submit Review</button>
+        <input class="block p-2 pl-4 pr-4 rounded border mb-2 w-full" type="file" name="image" id="image" accept="image/png, image/jpeg, image/webp, image/gif">
+        <input class="block p-2 pl-4 pr-4 rounded border mb-2 w-full" name="score" type="number" placeholder="Score (out of 100)" max="100" min="0" required />
+        <textarea class="block p-2 pl-4 pr-4 rounded border mb-2 w-full" name="details" placeholder="Thoughts?"></textarea>
+        <button type="submit" class="block bg-blue-500 text-white rounded p-2 pl-4 pr-4">Submit Review</button>
     </form>
-</main>
+</div>
