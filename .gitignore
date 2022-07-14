@@ -108,5 +108,7 @@ backend/tmp/
 
 backend/secrets.json
 backend/settings.json
+backend/data/*
+backend/data/blob/**/*
 
 .DS_Store
